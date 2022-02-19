@@ -2,6 +2,8 @@
     import Selector from "./selector.svelte";
     let columns = [];
     let id = 0;
+    let splitChar = '|';
+    let dataCount = 50;
     function add() {
         const column = {
             id: 'col' + id++,
@@ -10,6 +12,13 @@
         };
         columns = [...columns, column];
     }
+    function download () {
+        let a = document.createElement("a")
+        let file = new Blob([lines.join('\n')], {type: 'text'})
+        a.href = URL.createObjectURL(file)
+        a.download = 'data.csv'
+        a.click()
+    }
     function del(event) {
         const colId = event.target.dataset.item
         const colIndex = columns.findIndex(col => col.id === colId)
@@ -17,13 +26,12 @@
         temp.splice(colIndex, 1)
         columns = temp
     }
-    let lineCount = 50
     let lines = []
     function generate() {
-        lines = new Array(lineCount).fill(1).map((_, index) => {
+        lines = new Array(dataCount || 50).fill(1).map((_, index) => {
             return columns.map(column => {
                 return creatorMethods[column.creatorKey](index, column.extraData)
-            }).join(',')
+            }).join(splitChar || ',')
         })
     }
     function selectorHandle(event) {
@@ -84,7 +92,15 @@
 <div>
     <button on:click={add}>增加</button>
     <button on:click={generate}>生成</button>
-
+    <button on:click={download}>下载 csv</button>
+    <div>
+        <span>分隔符</span>
+    <input bind:value={splitChar} />
+    </div>
+    <div>
+        <span >生成数据量</span>
+    <input bind:value={dataCount} />
+    </div>
         {#each columns as column (column.id)}
         <div class="line">
             <div class="del" on:click={del} data-item={column.id}>删除</div>
@@ -111,6 +127,7 @@
         display: flex;
         flex-direction: row;
         align-items: center;
+        margin: 10px 0;
     }
     .del {
         border: .5px solid #efefef;
