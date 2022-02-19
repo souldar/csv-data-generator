@@ -84,7 +84,7 @@
         background-color: #409eff;
         color: white;
     }
-    select {
+    select, input {
         margin:0;
     }
     .selector {
