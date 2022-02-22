@@ -28,7 +28,7 @@
     }
     let lines = []
     function generate() {
-        lines = new Array(dataCount || 50).fill(1).map((_, index) => {
+        lines = new Array(parseInt(dataCount) || 50).fill(1).map((_, index) => {
             return columns.map(column => {
                 return creatorMethods[column.creatorKey](index, column.extraData)
             }).join(splitChar || ',')
@@ -39,7 +39,7 @@
         const findColIndex = columns.findIndex((column) => column.id === selectorId)
         columns[findColIndex] = {
             id: columns[findColIndex].id,
-            creatorKey: creatorKey ?? columns[findColIndex].creatorKey, 
+            creatorKey: creatorKey ?? columns[findColIndex].creatorKey,
             extraData: extraData ?? columns[findColIndex].extraData
         }
     }
@@ -47,7 +47,7 @@
         return origin + step;
     }
     function dateStep(step) {
-        return new Date().getTime() + step * 1000 * 60
+        return parseInt(new Date().getTime() / 1000) + step * 60
     }
     function randomNumber(_, count) {
         const numbers = '0123456789'
